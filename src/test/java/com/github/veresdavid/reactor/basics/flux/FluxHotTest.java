@@ -19,44 +19,44 @@ import java.time.Duration;
  */
 public class FluxHotTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FluxHotTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FluxHotTest.class);
 
-	@Test
-	public void fluxToHotFluxTest() throws InterruptedException {
-		// given
-		ConnectableFlux<Integer> flux = connectableFlux();
+    @Test
+    public void fluxToHotFluxTest() throws InterruptedException {
+        // given
+        ConnectableFlux<Integer> flux = connectableFlux();
 
-		// manual try
-		// With calling the connect method on a ConnectableFlux, it will start emitting items immediately, doesn't
-		// matter if it has any subscriptions or not.
-		flux.connect();
+        // manual try
+        // With calling the connect method on a ConnectableFlux, it will start emitting items immediately, doesn't
+        // matter if it has any subscriptions or not.
+        flux.connect();
 
-		// We perform a short sleep, so when we subscribe we will see that some items were already emitted and we
-		// won't receive them.
-		Thread.sleep(300);
+        // We perform a short sleep, so when we subscribe we will see that some items were already emitted and we
+        // won't receive them.
+        Thread.sleep(300);
 
-		flux.subscribe(integer -> LOGGER.info("{} little ewok", integer));
+        flux.subscribe(integer -> LOGGER.info("{} little ewok", integer));
 
-		Thread.sleep(500);
+        Thread.sleep(500);
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		// For this example, we create a new Connectable just for the test case, as the previous one is already
-		// completed and it has no more items, plus we have to manually connect to it.
-		// To keep things simple, we skip the virtual time solution this time.
-		ConnectableFlux<Integer> fluxToTest = connectableFlux();
-		StepVerifier.create(fluxToTest)
-			.then(fluxToTest::connect)
-			.expectNext(1, 2, 3, 4, 5)
-			.verifyComplete();
-	}
+        // when - then
+        // For this example, we create a new Connectable just for the test case, as the previous one is already
+        // completed and it has no more items, plus we have to manually connect to it.
+        // To keep things simple, we skip the virtual time solution this time.
+        ConnectableFlux<Integer> fluxToTest = connectableFlux();
+        StepVerifier.create(fluxToTest)
+            .then(fluxToTest::connect)
+            .expectNext(1, 2, 3, 4, 5)
+            .verifyComplete();
+    }
 
-	private ConnectableFlux<Integer> connectableFlux() {
-		return Flux.range(1, 5)
-			.log()
-			.delayElements(Duration.ofMillis(100))
-			.publish();
-	}
+    private ConnectableFlux<Integer> connectableFlux() {
+        return Flux.range(1, 5)
+            .log()
+            .delayElements(Duration.ofMillis(100))
+            .publish();
+    }
 
 }

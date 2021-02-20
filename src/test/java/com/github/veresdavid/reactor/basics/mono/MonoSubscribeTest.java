@@ -21,96 +21,96 @@ import reactor.test.StepVerifier;
  */
 public class MonoSubscribeTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MonoSubscribeTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonoSubscribeTest.class);
 
-	@Test
-	public void monoWithConsumer() {
-		// given
-		Mono<String> mono = Mono.just("Han Solo")
-			.log();
+    @Test
+    public void monoWithConsumer() {
+        // given
+        Mono<String> mono = Mono.just("Han Solo")
+            .log();
 
-		// manual try
-		mono.subscribe(s -> LOGGER.info("Value = {}", s));
+        // manual try
+        mono.subscribe(s -> LOGGER.info("Value = {}", s));
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectNext("Han Solo")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectNext("Han Solo")
+            .verifyComplete();
+    }
 
-	@Test
-	public void monoWithErrorConsumer() {
-		// given
-		Mono<String> mono = Mono.just("Leia Organa")
-			.log()
-			.map(this::throwRuntimeExceptionOnString);
+    @Test
+    public void monoWithErrorConsumer() {
+        // given
+        Mono<String> mono = Mono.just("Leia Organa")
+            .log()
+            .map(this::throwRuntimeExceptionOnString);
 
-		// manual try
-		mono.subscribe(
-			s -> LOGGER.info("This will never happen..."),
-			throwable -> LOGGER.error("Alert: {}", throwable.getMessage())
-		);
+        // manual try
+        mono.subscribe(
+            s -> LOGGER.info("This will never happen..."),
+            throwable -> LOGGER.error("Alert: {}", throwable.getMessage())
+        );
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectError(RuntimeException.class)
-			.verify();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectError(RuntimeException.class)
+            .verify();
+    }
 
-	@Test
-	public void monoWithCompleteConsumer() {
-		// given
-		Mono<String> mono = Mono.just("Lando Calrissian")
-			.log();
+    @Test
+    public void monoWithCompleteConsumer() {
+        // given
+        Mono<String> mono = Mono.just("Lando Calrissian")
+            .log();
 
-		// manual try
-		mono.subscribe(
-			s -> LOGGER.info("Value = {}", s),
-			null,
-			() -> LOGGER.info("Mono finished it's job!")
-		);
+        // manual try
+        mono.subscribe(
+            s -> LOGGER.info("Value = {}", s),
+            null,
+            () -> LOGGER.info("Mono finished it's job!")
+        );
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectNext("Lando Calrissian")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectNext("Lando Calrissian")
+            .verifyComplete();
+    }
 
-	@Test
-	public void monoWithSubscriptionConsumer() {
-		// given
-		Mono<String> mono = Mono.just("Owen Lars")
-			.log();
+    @Test
+    public void monoWithSubscriptionConsumer() {
+        // given
+        Mono<String> mono = Mono.just("Owen Lars")
+            .log();
 
-		// manual try
-		mono.subscribe(
-			s -> LOGGER.info("Value = {}", s),
-			null,
-			null,
-			subscription -> {
-				LOGGER.info("We got our subscription!");
-				LOGGER.info("Requesting 1 item...");
-				subscription.request(1);
-			}
-		);
+        // manual try
+        mono.subscribe(
+            s -> LOGGER.info("Value = {}", s),
+            null,
+            null,
+            subscription -> {
+                LOGGER.info("We got our subscription!");
+                LOGGER.info("Requesting 1 item...");
+                subscription.request(1);
+            }
+        );
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectNext("Owen Lars")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectNext("Owen Lars")
+            .verifyComplete();
+    }
 
-	private String throwRuntimeExceptionOnString(String string) {
-		if ("Leia Organa".equals(string)) {
-			throw new RuntimeException(string + " is a rebel scum!");
-		}
-		return string;
-	}
+    private String throwRuntimeExceptionOnString(String string) {
+        if ("Leia Organa".equals(string)) {
+            throw new RuntimeException(string + " is a rebel scum!");
+        }
+        return string;
+    }
 
 }

@@ -16,94 +16,94 @@ import java.util.List;
  */
 public class FluxCreationTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FluxCreationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FluxCreationTest.class);
 
-	@Test
-	public void fluxWithItems() {
-		// given
-		Flux<String> flux = Flux.just("R2-D2", "C3-PO")
-			.log();
+    @Test
+    public void fluxWithItems() {
+        // given
+        Flux<String> flux = Flux.just("R2-D2", "C3-PO")
+            .log();
 
-		// manual try
-		flux.subscribe(s -> LOGGER.info("Value = {}", s));
+        // manual try
+        flux.subscribe(s -> LOGGER.info("Value = {}", s));
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectNext("R2-D2", "C3-PO")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectNext("R2-D2", "C3-PO")
+            .verifyComplete();
+    }
 
-	@Test
-	public void fluxWithZeroItem() {
-		// given
-		Flux<Object> flux = Flux.empty()
-			.log();
+    @Test
+    public void fluxWithZeroItem() {
+        // given
+        Flux<Object> flux = Flux.empty()
+            .log();
 
-		// manual try
-		flux.subscribe();
+        // manual try
+        flux.subscribe();
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .verifyComplete();
+    }
 
-	@Test
-	public void fluxWithError() {
-		// given
-		Flux<Object> flux = Flux.error(new RuntimeException("Second Death Start explodes!"))
-			.log();
+    @Test
+    public void fluxWithError() {
+        // given
+        Flux<Object> flux = Flux.error(new RuntimeException("Second Death Start explodes!"))
+            .log();
 
-		// manual try
-		flux.subscribe(
-			o -> LOGGER.info("This will never happen!"),
-			Throwable::printStackTrace
-		);
+        // manual try
+        flux.subscribe(
+            o -> LOGGER.info("This will never happen!"),
+            Throwable::printStackTrace
+        );
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectError(RuntimeException.class)
-			.verify();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectError(RuntimeException.class)
+            .verify();
+    }
 
-	@Test
-	public void fluxWithRange() {
-		// given
-		Flux<Integer> flux = Flux.range(1, 5)
-			.log();
+    @Test
+    public void fluxWithRange() {
+        // given
+        Flux<Integer> flux = Flux.range(1, 5)
+            .log();
 
-		// manual try
-		flux.subscribe(integer -> LOGGER.info("Captain Solo, this is Rogue {}", integer));
+        // manual try
+        flux.subscribe(integer -> LOGGER.info("Captain Solo, this is Rogue {}", integer));
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectNext(1, 2, 3, 4, 5)
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectNext(1, 2, 3, 4, 5)
+            .verifyComplete();
+    }
 
-	@Test
-	public void fluxFromIterable() {
-		// given
-		List<String> walkers = List.of("AT-AT", "AT-ST");
-		Flux<String> flux = Flux.fromIterable(walkers)
-			.log();
+    @Test
+    public void fluxFromIterable() {
+        // given
+        List<String> walkers = List.of("AT-AT", "AT-ST");
+        Flux<String> flux = Flux.fromIterable(walkers)
+            .log();
 
-		// manual try
-		flux.subscribe(s -> LOGGER.info("Value = {}", s));
+        // manual try
+        flux.subscribe(s -> LOGGER.info("Value = {}", s));
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectNext("AT-AT", "AT-ST")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectNext("AT-AT", "AT-ST")
+            .verifyComplete();
+    }
 
 }

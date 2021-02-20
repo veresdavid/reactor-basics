@@ -14,24 +14,24 @@ import reactor.test.StepVerifier;
  */
 public class FluxFallbackTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FluxFallbackTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FluxFallbackTest.class);
 
-	@Test
-	public void fluxWithSwitchIfEmptyTest() {
-		// given
-		Flux<Object> flux = Flux.empty()
-			.log()
-			.switchIfEmpty(Flux.just("Master Yoda", "Mace Windu"));
+    @Test
+    public void fluxWithSwitchIfEmptyTest() {
+        // given
+        Flux<Object> flux = Flux.empty()
+            .log()
+            .switchIfEmpty(Flux.just("Master Yoda", "Mace Windu"));
 
-		// manual try
-		flux.subscribe(o -> LOGGER.info("Value = {}", o));
+        // manual try
+        flux.subscribe(o -> LOGGER.info("Value = {}", o));
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectNext("Master Yoda", "Mace Windu")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectNext("Master Yoda", "Mace Windu")
+            .verifyComplete();
+    }
 
 }

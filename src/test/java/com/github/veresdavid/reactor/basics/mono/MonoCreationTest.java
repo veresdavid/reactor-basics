@@ -15,51 +15,51 @@ import reactor.test.StepVerifier;
  */
 public class MonoCreationTest {
 
-	@Test
-	public void monoWithOneItem() {
-		// given
-		Mono<String> mono = Mono.just("Luke Skywalker")
-			.log();
+    @Test
+    public void monoWithOneItem() {
+        // given
+        Mono<String> mono = Mono.just("Luke Skywalker")
+            .log();
 
-		// manual try
-		mono.subscribe();
+        // manual try
+        mono.subscribe();
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectNext("Luke Skywalker")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectNext("Luke Skywalker")
+            .verifyComplete();
+    }
 
-	@Test
-	public void monoWithZeroItem() {
-		// given
-		Mono<Object> mono = Mono.empty()
-			.log();
+    @Test
+    public void monoWithZeroItem() {
+        // given
+        Mono<Object> mono = Mono.empty()
+            .log();
 
-		// manual try
-		mono.subscribe();
+        // manual try
+        mono.subscribe();
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(mono)
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .verifyComplete();
+    }
 
-	@Test
-	public void monoWithError() {
-		// given
-		Mono<Object> mono = Mono.error(new RuntimeException("Death Star explodes!"));
+    @Test
+    public void monoWithError() {
+        // given
+        Mono<Object> mono = Mono.error(new RuntimeException("Death Star explodes!"));
 
-		// manual try
-		mono.subscribe();
+        // manual try
+        mono.subscribe();
 
-		// when - then
-		StepVerifier.create(mono)
-			.expectError(RuntimeException.class)
-			.verify();
-	}
+        // when - then
+        StepVerifier.create(mono)
+            .expectError(RuntimeException.class)
+            .verify();
+    }
 
 }

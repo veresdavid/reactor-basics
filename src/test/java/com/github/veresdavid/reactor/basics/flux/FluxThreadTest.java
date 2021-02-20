@@ -16,52 +16,52 @@ import reactor.test.StepVerifier;
  */
 public class FluxThreadTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FluxThreadTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FluxThreadTest.class);
 
-	@Test
-	public void fluxWithSubscribeOn() {
-		// given
-		// In short, subscribeOn will affect where some of our callbacks, like doOnSubscribe, doOnNext, etc. will run.
-		// This affects our whole chain, but publishOn (see it on the next example) can override it.
-		Flux<String> flux = Flux.just("Admiral Ackbar", "Mon Mothma")
-			.log()
-			.subscribeOn(Schedulers.boundedElastic())
-			.doOnSubscribe(subscription -> LOGGER.info("doOnSubscribe on thread: {}", Thread.currentThread().getName()))
-			.doOnNext(s -> LOGGER.info("doOnNext on thread: {}", Thread.currentThread().getName()));
+    @Test
+    public void fluxWithSubscribeOn() {
+        // given
+        // In short, subscribeOn will affect where some of our callbacks, like doOnSubscribe, doOnNext, etc. will run.
+        // This affects our whole chain, but publishOn (see it on the next example) can override it.
+        Flux<String> flux = Flux.just("Admiral Ackbar", "Mon Mothma")
+            .log()
+            .subscribeOn(Schedulers.boundedElastic())
+            .doOnSubscribe(subscription -> LOGGER.info("doOnSubscribe on thread: {}", Thread.currentThread().getName()))
+            .doOnNext(s -> LOGGER.info("doOnNext on thread: {}", Thread.currentThread().getName()));
 
-		// manual try
-		flux.subscribe(s -> LOGGER.info("Value = {}", s));
+        // manual try
+        flux.subscribe(s -> LOGGER.info("Value = {}", s));
 
-		TestUtil.logSeparatorLine();
+        TestUtil.logSeparatorLine();
 
-		// when - then
-		StepVerifier.create(flux)
-			.expectNext("Admiral Ackbar", "Mon Mothma")
-			.verifyComplete();
-	}
+        // when - then
+        StepVerifier.create(flux)
+            .expectNext("Admiral Ackbar", "Mon Mothma")
+            .verifyComplete();
+    }
 
-	@Test
-	public void fluxWithPublishOn() {
-		// given
-		// Operator publishOn will affect where our doOnNext, doOnError and doOnComplete callbacks will run.
-		// This only affects the operators in the chain below it!
-		// Thus, publishOn can override a previous publishOn, or even a subscribeOn.
-		Flux<String> flux = Flux.just("Jabba", "Bib Fortuna")
-			.publishOn(Schedulers.single())
-			.map(s -> {
-				LOGGER.info("On thread: {}", Thread.currentThread().getName());
-				return s;
-			})
-			.publishOn(Schedulers.boundedElastic())
-			.map(s -> {
-				LOGGER.info("On thread: {}", Thread.currentThread().getName());
-				return s;
-			});
+    @Test
+    public void fluxWithPublishOn() {
+        // given
+        // Operator publishOn will affect where our doOnNext, doOnError and doOnComplete callbacks will run.
+        // This only affects the operators in the chain below it!
+        // Thus, publishOn can override a previous publishOn, or even a subscribeOn.
+        Flux<String> flux = Flux.just("Jabba", "Bib Fortuna")
+            .publishOn(Schedulers.single())
+            .map(s -> {
+                LOGGER.info("On thread: {}", Thread.currentThread().getName());
+                return s;
+            })
+            .publishOn(Schedulers.boundedElastic())
+            .map(s -> {
+                LOGGER.info("On thread: {}", Thread.currentThread().getName());
+                return s;
+            });
 
-		// manual try
-		flux.subscribe(s -> LOGGER.info("{}", s));
+        // manual try
+        flux.subscribe(s -> LOGGER.info("{}", s));
 
-		// when - then
-	}
+        // when - then
+    }
 
 }
