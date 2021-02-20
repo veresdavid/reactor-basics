@@ -17,6 +17,7 @@
         <reactor.version>3.4.2</reactor.version>
         <slf4j.version>1.7.30</slf4j.version>
         <junit.vesion>5.8.0-M1</junit.vesion>
+        <surefire.version>3.0.0-M5</surefire.version>
     </properties>
 
     <dependencies>
@@ -54,5 +55,15 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
